@@ -1,8 +1,11 @@
 fn main() {
-    let input = include_str!("../input.txt");
-    let mut result = 0f32;
+    let input: &str = include_str!("../input.txt");
+    println!("Part 1 => {}", part1(input));
+    println!("Part 2 => {}", part2(input));
+}
 
-    // Part 1.
+fn part1(input: &str) -> u32 {
+    let mut result = 0;
     for pass in input.lines()
     {
         let mut r = (0f32, 127f32);
@@ -17,14 +20,16 @@ fn main() {
             }            
         }
 
-        let id =  r.0 * 8f32 + c.0;
+        let id =  (r.0 * 8f32 + c.0) as u32;
         if id > result { result = id; }
     }
 
-    println!("Part 1 result: {}", result);    
+    result
+}
 
-    // Part 2.
-    let mut ids: Vec<i32> = input.lines().map(|pass| {
+fn part2(input: &str) -> u32 {
+    let mut result = 0;
+    let mut ids: Vec<u32> = input.lines().map(|pass| {
         let mut r = (0f32, 127f32);
         let mut c = (0f32, 7f32);
         for row in pass.chars() {
@@ -37,7 +42,7 @@ fn main() {
             }            
         }
 
-        (r.0 * 8f32 + c.0) as i32
+        (r.0 * 8f32 + c.0) as u32
     }).collect();
     
     ids.sort_by(|a, b| a.partial_cmp(b).unwrap());
@@ -45,12 +50,11 @@ fn main() {
     let mut prev = 0;
     for id in ids {        
         if id != prev + 1 {
-            result = (id - 1) as f32;
-            println!("missing {}", result);
+            result = id - 1;
         }
         
         prev = id;
     }
 
-    println!("Part 2 result: {}", result); 
+    result
 }
